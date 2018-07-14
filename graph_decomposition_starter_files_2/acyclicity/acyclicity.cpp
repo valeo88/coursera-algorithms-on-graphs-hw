@@ -4,8 +4,29 @@
 using std::vector;
 using std::pair;
 
-int acyclic(vector<vector<int> > &adj) {
+
+void explore(vector<int>& visited, const vector<vector<int>>& adj, int v) {
+    //std::cout << "vertex v: " << v << "\n";
+    visited[v]++;
+    for (int w : adj[v]) {
+        if (visited[w] == 0) {
+            explore(visited, adj, w);
+        } else {
+            visited[w]++;
+        }
+    }
+
+}
+
+int acyclic(vector<vector<int>> &adj) {
   //write your code here
+  for (int v = 0; v < adj.size(); ++v) {
+    vector<int> visited(adj.size(),0);
+    explore(visited,adj,v);
+    if (visited[v] > 1) {
+        return 1;
+    }
+  }
   return 0;
 }
 
