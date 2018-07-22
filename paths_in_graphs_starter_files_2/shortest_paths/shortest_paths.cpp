@@ -27,23 +27,27 @@ void shortest_paths(vector<vector<int> > &adj, vector<vector<int> > &cost, int s
         }
       }
   }
-  vector<int> neg_cycle_nodes;
+  queue<int> q;
   // check |V|th iteration
   for (int s = 0; s < adj.size(); ++s) {
     for (int j = 0; j < adj[s].size(); ++j) {
         const int v = adj[s][j];
         if (distance[v] > distance[s] + cost[s][j]) {
-            neg_cycle_nodes.push_back(v);
+            q.push(v);
+            //shortest[v] = 0;
         }
     }
   }
-  // mark all nodes in negative cycle
-  for (int v : neg_cycle_nodes) {
-    shortest[v] = 0;
-    int x = prev[v];
-    while(x!=-1 && x!=v) {
-        shortest[x] = 0;
-        x = prev[x];
+  // mark all nodes in negative cycles
+  while (!q.empty()) {
+    const int u = q.front();
+    q.pop();
+    for (int j = 0; j < adj[u].size(); ++j) {
+        const int v = adj[u][j];
+        if  (shortest[v]==1) {
+            q.push(v);
+            shortest[v] = 0;
+        }
     }
   }
 
